@@ -19,6 +19,8 @@ package org.kamranzafar.jtar;
 
 import java.io.File;
 
+import dk.mada.mjtar.TarConstants;
+
 /**
  * @author Kamran
  * 

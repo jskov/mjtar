@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
+import dk.mada.mjtar.TarConstants;
+
 /**
  * @author Kamran Zafar
  * 

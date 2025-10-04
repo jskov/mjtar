@@ -21,6 +21,8 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import dk.mada.mjtar.TarConstants;
+
 /**
  * @author Kamran Zafar
  * 
