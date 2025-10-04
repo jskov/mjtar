@@ -33,6 +33,6 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Run tests
-        run: ./gradlew --configuration-cache check javadoc -s -Pversion=${BUILD_LABEL//\//_}
+        run: ./gradlew --configuration-cache check javadoc sonar -s -Pversion=${BUILD_LABEL//\//_}
         env:
           BUILD_LABEL: ${{ github.head_ref || github.ref_name }}
