@@ -105,9 +105,9 @@
       <property name="allowMissingReturnTag" value="true"/>  <!-- wait for issue #10776 -->
     </module>
     <module name="JavadocType"/>
-    <module name="JavadocVariable">
+    <!-- does not support md javadoc <module name="JavadocVariable">
       <property name="ignoreNamePattern" value="log|logger"/>
-    </module>
+    </module>-->
     <module name="JavadocStyle">
       <property name="checkFirstSentence" value="false" /> <!-- wait for issue #10776 -->
     </module>

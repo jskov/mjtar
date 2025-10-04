@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Date;
 
 import dk.mada.mjtar.Octal;
+import dk.mada.mjtar.PermissionUtils;
 
 /**
  * @author Kamran Zafar
