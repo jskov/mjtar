@@ -1,0 +1,34 @@
+plugins {
+    id 'eclipse'
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation (libs.bundles.testUnit)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+    
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.named('compileJava').configure {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+tasks.named('compileTestJava').configure {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test').configure {
+    testLogging.showStandardStreams = false
+}
