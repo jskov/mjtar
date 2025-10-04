@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'java'
-    id "org.sonarqube" version "6.3.1.5724"
+    id 'dk.mada.style' version '1.2.0'
 }
 
 repositories {
@@ -32,11 +32,4 @@ tasks.named('compileTestJava').configure {
 
 tasks.named('test').configure {
     testLogging.showStandardStreams = false
-}
-
-sonar {
-  properties {
-    property "sonar.projectKey", "jskov_mjtar"
-    property "sonar.organization", "jskov-github"
-  }
 }
