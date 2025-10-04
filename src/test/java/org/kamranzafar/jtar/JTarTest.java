@@ -36,6 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dk.mada.mjtar.TarConstants;
+import dk.mada.mjtar.TarUtils;
 
 public class JTarTest {
 	static final int BUFFER = 2048;
