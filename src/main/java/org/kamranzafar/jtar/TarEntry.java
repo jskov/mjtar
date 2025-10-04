@@ -199,14 +199,14 @@ public class TarEntry {
 		int offset = 0;
 
 		offset = TarHeader.getNameBytes(header.name, outbuf, offset, TarHeader.NAMELEN);
-		offset = Octal.getOctalBytes(header.mode, outbuf, offset, TarHeader.MODELEN);
-		offset = Octal.getOctalBytes(header.userId, outbuf, offset, TarHeader.UIDLEN);
-		offset = Octal.getOctalBytes(header.groupId, outbuf, offset, TarHeader.GIDLEN);
+		offset = Octal.writeOctalBytes(header.mode, outbuf, offset, TarHeader.MODELEN);
+		offset = Octal.writeOctalBytes(header.userId, outbuf, offset, TarHeader.UIDLEN);
+		offset = Octal.writeOctalBytes(header.groupId, outbuf, offset, TarHeader.GIDLEN);
 
 		long size = header.size;
 
-		offset = Octal.getLongOctalBytes(size, outbuf, offset, TarHeader.SIZELEN);
-		offset = Octal.getLongOctalBytes(header.modTime, outbuf, offset, TarHeader.MODTIMELEN);
+		offset = Octal.writeLongOctalBytes(size, outbuf, offset, TarHeader.SIZELEN);
+		offset = Octal.writeLongOctalBytes(header.modTime, outbuf, offset, TarHeader.MODTIMELEN);
 
 		int csOffset = offset;
 		for (int c = 0; c < TarHeader.CHKSUMLEN; ++c)
@@ -218,8 +218,8 @@ public class TarEntry {
 		offset = TarHeader.getNameBytes(header.magic, outbuf, offset, TarHeader.USTAR_MAGICLEN);
 		offset = TarHeader.getNameBytes(header.userName, outbuf, offset, TarHeader.USTAR_USER_NAMELEN);
 		offset = TarHeader.getNameBytes(header.groupName, outbuf, offset, TarHeader.USTAR_GROUP_NAMELEN);
-		offset = Octal.getOctalBytes(header.devMajor, outbuf, offset, TarHeader.USTAR_DEVLEN);
-		offset = Octal.getOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
+		offset = Octal.writeOctalBytes(header.devMajor, outbuf, offset, TarHeader.USTAR_DEVLEN);
+		offset = Octal.writeOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
 		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
 
 		for (; offset < outbuf.length;)
@@ -227,7 +227,7 @@ public class TarEntry {
 
 		long checkSum = this.computeCheckSum(outbuf);
 
-		Octal.getCheckSumOctalBytes(checkSum, outbuf, csOffset, TarHeader.CHKSUMLEN);
+		Octal.writeCheckSumOctalBytes(checkSum, outbuf, csOffset, TarHeader.CHKSUMLEN);
 	}
 
 	/**

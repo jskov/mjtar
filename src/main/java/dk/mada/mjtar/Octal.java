@@ -15,8 +15,15 @@ package dk.mada.mjtar;
 
 /// Utilities for handling octals.
 ///
+/// TODO should be replaced with Long.parseUnsignedLong/toUnsignedString
+///
 /// @author Kamran Zafar
 public final class Octal {
+    /** Bit shift for each octal number. */
+    private static final int OCTAL_SHIFT = 3;
+    /** Bit mask for (lower) octal number. */
+    private static final int OCTAL_MASK = 7;
+
     /// Prevents instantiation.
     private Octal() {
         // empty
@@ -52,7 +59,7 @@ public final class Octal {
 
             stillPadding = false;
 
-            result = (result << 3) + (header[i] - '0');
+            result = (result << OCTAL_SHIFT) + (header[i] - '0');
         }
 
         return result;
@@ -61,12 +68,12 @@ public final class Octal {
     /// Write an octal integer to a header buffer.
     ///
     /// @param value   the value to write
-    /// @param buf     the header buffer from which to parse
-    /// @param offset  the offset into the buffer from which to parse
+    /// @param buf     the header buffer to write into
+    /// @param offset  the offset to write from
     /// @param length  the number of header bytes to parse
     ///
     /// @return the integer value of the octal bytes
-    public static int getOctalBytes(long value, byte[] buf, int offset, int length) {
+    public static int writeOctalBytes(long value, byte[] buf, int offset, int length) {
         int idx = length - 1;
 
         buf[offset + idx] = 0;
@@ -79,8 +86,8 @@ public final class Octal {
             --idx;
         } else {
             for (long val = value; idx >= 0 && val > 0; --idx) {
-                buf[offset + idx] = (byte) ((byte) '0' + (byte) (val & 7));
-                val = val >> 3;
+                buf[offset + idx] = (byte) ((byte) '0' + (byte) (val & OCTAL_MASK));
+                val = val >> OCTAL_SHIFT;
             }
         }
 
@@ -94,12 +101,12 @@ public final class Octal {
     /// Write the checksum octal integer to a header buffer.
     ///
     /// @param value   the value to write
-    /// @param buf     the header buffer from which to parse
-    /// @param offset  the offset into the buffer from which to parse
+    /// @param buf     the header buffer to write into
+    /// @param offset  the offset to write from
     /// @param length  the number of header bytes to parse
     /// @return the integer value of the entry's checksum
-    public static int getCheckSumOctalBytes(long value, byte[] buf, int offset, int length) {
-        getOctalBytes(value, buf, offset, length);
+    public static int writeCheckSumOctalBytes(long value, byte[] buf, int offset, int length) {
+        writeOctalBytes(value, buf, offset, length);
         buf[offset + length - 1] = (byte) ' ';
         buf[offset + length - 2] = 0;
         return offset + length;
@@ -108,13 +115,13 @@ public final class Octal {
     /// Write an octal long integer to a header buffer.
     ///
     /// @param value   the value to write
-    /// @param buf     the header buffer from which to parse
-    /// @param offset  the offset into the buffer from which to parse
+    /// @param buf     the header buffer to write into
+    /// @param offset  the offset to write from
     /// @param length  the number of header bytes to parse
     /// @return the long value of the octal bytes
-    public static int getLongOctalBytes(long value, byte[] buf, int offset, int length) {
+    public static int writeLongOctalBytes(long value, byte[] buf, int offset, int length) {
         byte[] temp = new byte[length + 1];
-        getOctalBytes(value, temp, 0, length + 1);
+        writeOctalBytes(value, temp, 0, length + 1);
         System.arraycopy(temp, 0, buf, offset, length);
         return offset + length;
     }
