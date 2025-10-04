@@ -25,6 +25,14 @@ jobs:
         with:
           fetch-depth: 0 # Allows sonar to collect blame information
 
+      # From https://docs.sonarqube.org/latest/analysis/github-integration/
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
         # v4.4.3
@@ -36,3 +44,5 @@ jobs:
         run: ./gradlew --configuration-cache check javadoc sonar -s -Pversion=${BUILD_LABEL//\//_}
         env:
           BUILD_LABEL: ${{ github.head_ref || github.ref_name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
