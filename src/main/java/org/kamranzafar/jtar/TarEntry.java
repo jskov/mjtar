@@ -20,6 +20,8 @@ package org.kamranzafar.jtar;
 import java.io.File;
 import java.util.Date;
 
+import dk.mada.mjtar.Octal;
+
 /**
  * @author Kamran Zafar
  * 
