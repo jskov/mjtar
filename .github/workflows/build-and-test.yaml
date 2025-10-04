@@ -1,0 +1,38 @@
+name: Build and Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # Allows sonar to collect blame information
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        # v4.4.3
+        with:
+          validate-wrappers: true
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Run tests
+        run: ./gradlew --configuration-cache check javadoc -s -Pversion=${BUILD_LABEL//\//_}
+        env:
+          BUILD_LABEL: ${{ github.head_ref || github.ref_name }}
