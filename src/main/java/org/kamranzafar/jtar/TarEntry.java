@@ -22,6 +22,7 @@ import java.util.Date;
 
 import dk.mada.mjtar.Octal;
 import dk.mada.mjtar.PermissionUtils;
+import dk.mada.mjtar.TarHeader;
 
 /**
  * @author Kamran Zafar
@@ -199,7 +200,7 @@ public class TarEntry {
 	public void writeEntryHeader(byte[] outbuf) {
 		int offset = 0;
 
-		offset = TarHeader.getNameBytes(header.name, outbuf, offset, TarHeader.NAMELEN);
+		offset = TarHeader.writeEntryName(header.name, outbuf, offset, TarHeader.NAMELEN);
 		offset = Octal.writeOctalBytes(header.mode, outbuf, offset, TarHeader.MODELEN);
 		offset = Octal.writeOctalBytes(header.userId, outbuf, offset, TarHeader.UIDLEN);
 		offset = Octal.writeOctalBytes(header.groupId, outbuf, offset, TarHeader.GIDLEN);
@@ -215,13 +216,13 @@ public class TarEntry {
 
 		outbuf[offset++] = header.linkFlag;
 
-		offset = TarHeader.getNameBytes(header.linkName, outbuf, offset, TarHeader.NAMELEN);
-		offset = TarHeader.getNameBytes(header.magic, outbuf, offset, TarHeader.USTAR_MAGICLEN);
-		offset = TarHeader.getNameBytes(header.userName, outbuf, offset, TarHeader.USTAR_USER_NAMELEN);
-		offset = TarHeader.getNameBytes(header.groupName, outbuf, offset, TarHeader.USTAR_GROUP_NAMELEN);
+		offset = TarHeader.writeEntryName(header.linkName, outbuf, offset, TarHeader.NAMELEN);
+		offset = TarHeader.writeEntryName(header.magic, outbuf, offset, TarHeader.USTAR_MAGICLEN);
+		offset = TarHeader.writeEntryName(header.userName, outbuf, offset, TarHeader.USTAR_USER_NAMELEN);
+		offset = TarHeader.writeEntryName(header.groupName, outbuf, offset, TarHeader.USTAR_GROUP_NAMELEN);
 		offset = Octal.writeOctalBytes(header.devMajor, outbuf, offset, TarHeader.USTAR_DEVLEN);
 		offset = Octal.writeOctalBytes(header.devMinor, outbuf, offset, TarHeader.USTAR_DEVLEN);
-		offset = TarHeader.getNameBytes(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
+		offset = TarHeader.writeEntryName(header.namePrefix, outbuf, offset, TarHeader.USTAR_FILENAME_PREFIX);
 
 		for (; offset < outbuf.length;)
 			outbuf[offset++] = 0;

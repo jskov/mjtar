@@ -51,7 +51,8 @@ public final class TarInputStream extends FilterInputStream {
         // empty
     }
 
-    /// Repositions this stream to the position at the time the mark method was last called on this input stream. Unsupported.
+    /// Repositions this stream to the position at the time the mark method was last called on this input stream.
+    // Unsupported.
     ///
     /// @throws IOException if called
     @Override
