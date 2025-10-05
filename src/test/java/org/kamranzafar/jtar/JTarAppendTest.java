@@ -32,6 +32,8 @@ import java.nio.file.Files;
 import org.junit.Before;
 import org.junit.Test;
 
+import dk.mada.mjtar.TarOutputStream;
+
 public class JTarAppendTest {
 	static final int BUFFER = 2048;
 

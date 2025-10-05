@@ -9,6 +9,8 @@ repositories {
 }
 
 dependencies {
+    implementation     (libs.jspecify)
+
     testImplementation (libs.bundles.testUnit)
 }
 
