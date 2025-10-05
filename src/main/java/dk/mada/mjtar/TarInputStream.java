@@ -18,7 +18,6 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.jspecify.annotations.Nullable;
-import org.kamranzafar.jtar.TarEntry;
 
 /// Tar input stream, used for reading content from a tar archive.
 ///

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import org.jspecify.annotations.Nullable;
-import org.kamranzafar.jtar.TarEntry;
 
 /// Tar output stream, used for writing content to a tar archive.
 ///
