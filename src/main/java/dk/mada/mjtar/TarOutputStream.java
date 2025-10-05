@@ -24,7 +24,7 @@ import java.io.RandomAccessFile;
 import org.jspecify.annotations.Nullable;
 import org.kamranzafar.jtar.TarEntry;
 
-/// Tar output stream, used for writing files to a tar archive.
+/// Tar output stream, used for writing content to a tar archive.
 ///
 /// TODO: switch to Path
 ///

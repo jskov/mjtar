@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import org.junit.Before;
 import org.junit.Test;
 
+import dk.mada.mjtar.TarInputStream;
 import dk.mada.mjtar.TarOutputStream;
 
 public class JTarAppendTest {

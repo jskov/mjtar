@@ -36,6 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dk.mada.mjtar.TarConstants;
+import dk.mada.mjtar.TarInputStream;
 import dk.mada.mjtar.TarOutputStream;
 import dk.mada.mjtar.TarUtils;
 
