@@ -35,6 +35,13 @@ import java.util.zip.GZIPInputStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import dk.mada.mjtar.TarConstants;
+import dk.mada.mjtar.TarEntry;
+import dk.mada.mjtar.TarHeader;
+import dk.mada.mjtar.TarInputStream;
+import dk.mada.mjtar.TarOutputStream;
+import dk.mada.mjtar.TarUtils;
+
 public class JTarTest {
 	static final int BUFFER = 2048;
 
