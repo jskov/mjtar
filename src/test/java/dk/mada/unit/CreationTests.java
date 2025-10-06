@@ -14,14 +14,15 @@ import dk.mada.mjtar.TarOutputStream;
 /**
  * Tests of constructor variants.
  */
-public class CreationTests {
+class CreationTests {
     @TempDir(cleanup = CleanupMode.NEVER) Path dir;
 
     /// Tests simple file creation.
     @Test
     void canCreateEmptyArchiveInNewFile() throws IOException {
         Path archive = dir.resolve("a.tar");
-        try (TarOutputStream _ = new TarOutputStream(archive.toFile())) {
+        try (var _ = new TarOutputStream(archive.toFile())) {
+            // empty
         }
         assertThat(archive)
             .isRegularFile()
