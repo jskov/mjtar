@@ -1,5 +1,6 @@
 plugins {
     id 'eclipse'
+    id 'jacoco'
     id 'java'
     id 'dk.mada.style' version '1.2.0'
 }
@@ -11,6 +12,7 @@ repositories {
 dependencies {
     implementation     (libs.jspecify)
 
+    testImplementation platform(libs.junitBom)
     testImplementation (libs.bundles.testUnit)
 }
 
@@ -33,5 +35,14 @@ tasks.named('compileTestJava').configure {
 }
 
 tasks.named('test').configure {
-    testLogging.showStandardStreams = false
+    useJUnitPlatform()
+    testLogging.showStandardStreams = true
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+    }
 }

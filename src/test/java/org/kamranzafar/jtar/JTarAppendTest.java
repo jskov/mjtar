@@ -17,7 +17,7 @@
 
 package org.kamranzafar.jtar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -29,22 +29,22 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import dk.mada.mjtar.TarEntry;
 import dk.mada.mjtar.TarInputStream;
 import dk.mada.mjtar.TarOutputStream;
 
-public class JTarAppendTest {
+class JTarAppendTest {
 	static final int BUFFER = 2048;
 
 	private File dir;
 	private File outDir;
 	private File inDir;
 
-	@Before
-	public void setup() throws IOException {
+	@BeforeEach
+	void setup() throws IOException {
 		dir = Files.createTempDirectory("apnd").toFile();
 		dir.mkdirs();
 		outDir = new File(dir, "out");
@@ -54,7 +54,7 @@ public class JTarAppendTest {
 	}
 
 	@Test
-	public void testSingleOperation() throws IOException {
+	void testSingleOperation() throws IOException {
 		TarOutputStream tar = new TarOutputStream(new FileOutputStream(new File(dir, "tar.tar")));
 		tar.putNextEntry(new TarEntry(TestUtils.writeStringToFile("a", new File(inDir, "afile")), "afile"));
 		copyFileToStream(new File(inDir, "afile"), tar);
@@ -70,7 +70,7 @@ public class JTarAppendTest {
 	}
 
 	@Test
-	public void testAppend() throws IOException {
+	void testAppend() throws IOException {
 		TarOutputStream tar = new TarOutputStream(new FileOutputStream(new File(dir, "tar.tar")));
 		tar.putNextEntry(new TarEntry(TestUtils.writeStringToFile("a", new File(inDir, "afile")), "afile"));
 		copyFileToStream(new File(inDir, "afile"), tar);
