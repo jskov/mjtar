@@ -21,12 +21,10 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -258,7 +256,7 @@ class JTarTest {
 		assertTrue(fileEntry.equals(createdEntry));
 	}
 
-	private void assertFileContents(Path destFolder) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	private void assertFileContents(Path destFolder) throws IOException {
 		assertEquals("HPeX2kD5kSTc7pzCDX", Files.readString(destFolder.resolve("tartest/one")));
 		assertEquals("gTzyuQjfhrnyX9cTBSy", Files.readString(destFolder.resolve("tartest/two")));
 		assertEquals("KG889vdgjPHQXUEXCqrr", Files.readString(destFolder.resolve("tartest/three")));

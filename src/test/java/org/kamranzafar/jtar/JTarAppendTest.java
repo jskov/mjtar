@@ -86,7 +86,7 @@ class JTarAppendTest {
 	}
 
 	/// Make sure that the contents of the input & output dirs are identical.
-	private void assertInEqualsOut() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	private void assertInEqualsOut() throws UnsupportedEncodingException, FileNotFoundException {
 		assertEquals(inDir.toFile().list().length, outDir.toFile().list().length);
 		for (File in : inDir.toFile().listFiles()) {
 		    assertThat(in.toPath()).hasSameTextualContentAs(outDir.resolve(in.getName()));
