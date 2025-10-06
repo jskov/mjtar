@@ -37,4 +37,12 @@ tasks.named('compileTestJava').configure {
 tasks.named('test').configure {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+    }
 }
