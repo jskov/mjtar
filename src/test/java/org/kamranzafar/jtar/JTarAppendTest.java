@@ -17,7 +17,7 @@
 
 package org.kamranzafar.jtar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

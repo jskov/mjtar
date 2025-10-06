@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation     (libs.jspecify)
 
+    testImplementation platform(libs.junitBom)
     testImplementation (libs.bundles.testUnit)
 }
 
