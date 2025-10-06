@@ -29,8 +29,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import dk.mada.mjtar.TarEntry;
 import dk.mada.mjtar.TarInputStream;
@@ -43,7 +43,7 @@ public class JTarAppendTest {
 	private File outDir;
 	private File inDir;
 
-	@Before
+	@BeforeEach
 	public void setup() throws IOException {
 		dir = Files.createTempDirectory("apnd").toFile();
 		dir.mkdirs();
