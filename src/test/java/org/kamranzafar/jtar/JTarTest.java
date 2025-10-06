@@ -1,19 +1,16 @@
-/**
- * Copyright 2012 Kamran Zafar 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at 
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License. 
- * 
- */
+/// Copyright 2012 Kamran Zafar 
+/// 
+/// Licensed under the Apache License, Version 2.0 (the "License"); 
+/// you may not use this file except in compliance with the License. 
+/// You may obtain a copy of the License at 
+/// 
+///      http://www.apache.org/licenses/LICENSE-2.0 
+/// 
+/// Unless required by applicable law or agreed to in writing, software 
+/// distributed under the License is distributed on an "AS IS" BASIS, 
+/// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+/// See the License for the specific language governing permissions and 
+/// limitations under the License. 
 
 package org.kamranzafar.jtar;
 
@@ -24,16 +21,17 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import dk.mada.mjtar.TarConstants;
 import dk.mada.mjtar.TarEntry;
@@ -45,96 +43,81 @@ import dk.mada.mjtar.TarUtils;
 class JTarTest {
 	static final int BUFFER = 2048;
 
-	private File dir;
+	private @TempDir Path dir;
 
-	@BeforeEach
-	void setup() throws IOException {
-		dir = Files.createTempDirectory("tartest").toFile();
-		dir.mkdirs();
-	}
-
-	/**
-	 * Tar the given folder
-	 * 
-	 * @throws IOException
-	 */
+	/// Tar the given folder.
+	///
+	/// @throws IOException if there is an IO error
 	@Test
 	void tar() throws IOException {
-		FileOutputStream dest = new FileOutputStream(dir.getAbsolutePath() + "/tartest.tar");
+		OutputStream dest = Files.newOutputStream(dir.toAbsolutePath().resolve("tartest.tar"));
 		TarOutputStream out = new TarOutputStream(new BufferedOutputStream(dest));
 
-		File tartest = new File(dir.getAbsolutePath(), "tartest");
-		tartest.mkdirs();
+		Path tartest = dir.toAbsolutePath().resolve("tartest");
+		Files.createDirectories(tartest);
 
-		TestUtils.writeStringToFile("HPeX2kD5kSTc7pzCDX", new File(tartest, "one"));
-		TestUtils.writeStringToFile("gTzyuQjfhrnyX9cTBSy", new File(tartest, "two"));
-		TestUtils.writeStringToFile("KG889vdgjPHQXUEXCqrr", new File(tartest, "three"));
-		TestUtils.writeStringToFile("CNBDGjEJNYfms7rwxfkAJ", new File(tartest, "four"));
-		TestUtils.writeStringToFile("tT6mFKuLRjPmUDjcVTnjBL", new File(tartest, "five"));
-		TestUtils.writeStringToFile("jrPYpzLfWB5vZTRsSKqFvVj", new File(tartest, "six"));
+		Files.writeString(tartest.resolve("one"), "HPeX2kD5kSTc7pzCDX");
+		Files.writeString(tartest.resolve("two"), "gTzyuQjfhrnyX9cTBSy");
+		Files.writeString(tartest.resolve("three"), "KG889vdgjPHQXUEXCqrr");
+		Files.writeString(tartest.resolve("four"), "CNBDGjEJNYfms7rwxfkAJ");
+		Files.writeString(tartest.resolve("five"), "tT6mFKuLRjPmUDjcVTnjBL");
+		Files.writeString(tartest.resolve("six"), "jrPYpzLfWB5vZTRsSKqFvVj");
 
-		tarFolder(null, dir.getAbsolutePath() + "/tartest/", out);
+		tarFolder(null, dir.toAbsolutePath().toString() + "/tartest/", out);
 
 		out.close();
 
-		assertEquals(TarUtils.calculateTarSize(new File(dir.getAbsolutePath() + "/tartest")), new File(dir.getAbsolutePath() + "/tartest.tar").length());
+		assertEquals(TarUtils.calculateTarSize(dir.toAbsolutePath().resolve("tartest")), Files.size(dir.toAbsolutePath().resolve("tartest.tar")));
 	}
 
-	/**
-	 * Untar the tar file
-	 * 
-	 * @throws IOException
-	 */
+	/// Untar the tar file.
+	///
+    /// @throws IOException if there is an IO error
 	@Test
 	void untarTarFile() throws IOException {
-		File destFolder = new File(dir, "untartest");
-		destFolder.mkdirs();
+		Path destFolder = dir.resolve("untartest");
+		Files.createDirectories(destFolder);
 
-		File zf = new File("src/test/resources/tartest.tar");
+		Path zf = Paths.get("src/test/resources/tartest.tar");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
-		untar(tis, destFolder.getAbsolutePath());
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(Files.newInputStream(zf)));
+		untar(tis, destFolder.toAbsolutePath().toString());
 
 		tis.close();
 
 		assertFileContents(destFolder);
 	}
 
-	/**
-	 * Untar the tar file
-	 * 
-	 * @throws IOException
-	 */
+	/// Untar the tar file.
+	///
+    /// @throws IOException if there is an IO error
 	@Test
 	void untarTarFileDefaultSkip() throws IOException {
-		File destFolder = new File(dir, "untartest/skip");
-		destFolder.mkdirs();
+		Path destFolder = dir.resolve("untartest/skip");
+		Files.createDirectories(destFolder);
 
-		File zf = new File("src/test/resources/tartest.tar");
+		Path zf = Paths.get("src/test/resources/tartest.tar");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(Files.newInputStream(zf)));
 		tis.setDefaultSkip(true);
-		untar(tis, destFolder.getAbsolutePath());
+		untar(tis, destFolder.toAbsolutePath().toString());
 
 		tis.close();
 
 		assertFileContents(destFolder);
-
 	}
 
-	/**
-	 * Untar the gzipped-tar file
-	 * 
-	 * @throws IOException
-	 */
+	/// Untar the gzipped-tar file
+	///
+    /// @throws IOException if there is an IO error
 	@Test
 	void untarTGzFile() throws IOException {
-		File destFolder = new File(dir, "untargztest");
-		File zf = new File("src/test/resources/tartest.tar.gz");
+		Path destFolder = dir.resolve("untargztest");
+		Path zf = Paths.get("src/test/resources/tartest.tar.gz");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(new FileInputStream(zf))));
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(new GZIPInputStream(Files.newInputStream(zf))));
 
-		untar(tis, destFolder.getAbsolutePath());
+		untar(tis, destFolder.toAbsolutePath().toString());
 
 		tis.close();
 
@@ -144,12 +127,12 @@ class JTarTest {
 
 	@Test
 	void testOffset() throws IOException {
-		File destFolder = new File(dir, "untartest");
-		destFolder.mkdirs();
+		Path destFolder = dir.resolve("untartest");
+		Files.createDirectories(destFolder);
 
-		File zf = new File("src/test/resources/tartest.tar");
+		Path zf = Paths.get("src/test/resources/tartest.tar");
 
-		TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(zf)));
+		TarInputStream tis = new TarInputStream(new BufferedInputStream(Files.newInputStream(zf)));
 		tis.getNextEntry();
 		assertEquals(TarConstants.HEADER_BLOCK, tis.getCurrentOffset());
 		tis.getNextEntry();
@@ -158,7 +141,7 @@ class JTarTest {
 		assertEquals(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2, tis.getCurrentOffset());
 		tis.close();
 		
-		RandomAccessFile rif = new RandomAccessFile(zf, "r");
+		RandomAccessFile rif = new RandomAccessFile(zf.toFile(), "r");
 		rif.seek(TarConstants.HEADER_BLOCK * 3 + TarConstants.DATA_BLOCK * 2);
 		byte[] data = new byte[(int)entry.getSize()];
 		rif.read(data);
@@ -224,7 +207,7 @@ class JTarTest {
 				if (fl != null && fl.length != 0) {
 					tarFolder(parent, fe.getPath(), out);
 				} else {
-					TarEntry entry = new TarEntry(fe, parent + files[i] + "/");
+					TarEntry entry = new TarEntry(fe.toPath(), parent + files[i] + "/");
 					out.putNextEntry(entry);
 				}
 				continue;
@@ -232,7 +215,7 @@ class JTarTest {
 
 			FileInputStream fi = new FileInputStream(fe);
 			origin = new BufferedInputStream(fi);
-			TarEntry entry = new TarEntry(fe, parent + files[i]);
+			TarEntry entry = new TarEntry(fe.toPath(), parent + files[i]);
 			out.putNextEntry(entry);
 
 			int count;
@@ -273,12 +256,12 @@ class JTarTest {
 		assertTrue(fileEntry.equals(createdEntry));
 	}
 
-	private void assertFileContents(File destFolder) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-		assertEquals("HPeX2kD5kSTc7pzCDX", TestUtils.readFile(new File(destFolder, "tartest/one")));
-		assertEquals("gTzyuQjfhrnyX9cTBSy", TestUtils.readFile(new File(destFolder, "tartest/two")));
-		assertEquals("KG889vdgjPHQXUEXCqrr", TestUtils.readFile(new File(destFolder, "tartest/three")));
-		assertEquals("CNBDGjEJNYfms7rwxfkAJ", TestUtils.readFile(new File(destFolder, "tartest/four")));
-		assertEquals("tT6mFKuLRjPmUDjcVTnjBL", TestUtils.readFile(new File(destFolder, "tartest/five")));
-		assertEquals("jrPYpzLfWB5vZTRsSKqFvVj", TestUtils.readFile(new File(destFolder, "tartest/six")));
+	private void assertFileContents(Path destFolder) throws IOException {
+		assertEquals("HPeX2kD5kSTc7pzCDX", Files.readString(destFolder.resolve("tartest/one")));
+		assertEquals("gTzyuQjfhrnyX9cTBSy", Files.readString(destFolder.resolve("tartest/two")));
+		assertEquals("KG889vdgjPHQXUEXCqrr", Files.readString(destFolder.resolve("tartest/three")));
+		assertEquals("CNBDGjEJNYfms7rwxfkAJ", Files.readString(destFolder.resolve("tartest/four")));
+		assertEquals("tT6mFKuLRjPmUDjcVTnjBL", Files.readString(destFolder.resolve("tartest/five")));
+		assertEquals("jrPYpzLfWB5vZTRsSKqFvVj", Files.readString(destFolder.resolve("tartest/six")));
 	}
 }

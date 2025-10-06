@@ -1,9 +1,9 @@
 package dk.mada.mjtar;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
 import java.util.Map;
@@ -63,21 +63,21 @@ public final class PermissionUtils {
     ///
     /// @throws NullPointerException if file is null.
     /// @throws IllegalArgumentException if file does not exist.
-    public static int permissions(File f) {
+    public static int permissions(Path f) {
         if (f == null) {
             throw new NullPointerException("File is null.");
         }
-        if (!f.exists()) {
+        if (!Files.exists(f)) {
             throw new IllegalArgumentException("File " + f + " does not exist.");
         }
 
         return IS_POSIX ? posixPermissions(f) : standardPermissions(f);
     }
 
-    private static int posixPermissions(File f) {
+    private static int posixPermissions(Path f) {
         int number = 0;
         try {
-            Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(f.toPath());
+            Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(f);
             for (Map.Entry<PosixFilePermission, Integer> entry : posixPermissionToInteger.entrySet()) {
                 if (permissions.contains(entry.getKey())) {
                     number += entry.getValue();
@@ -89,21 +89,21 @@ public final class PermissionUtils {
         return number;
     }
 
-    private static Set<StandardFilePermission> readStandardPermissions(File f) {
+    private static Set<StandardFilePermission> readStandardPermissions(Path f) {
         Set<StandardFilePermission> permissions = new HashSet<>();
-        if (f.canExecute()) {
+        if (Files.isExecutable(f)) {
             permissions.add(StandardFilePermission.EXECUTE);
         }
-        if (f.canWrite()) {
+        if (Files.isWritable(f)) {
             permissions.add(StandardFilePermission.WRITE);
         }
-        if (f.canRead()) {
+        if (Files.isReadable(f)) {
             permissions.add(StandardFilePermission.READ);
         }
         return permissions;
     }
 
-    private static Integer standardPermissions(File f) {
+    private static Integer standardPermissions(Path f) {
         int number = 0;
         Set<StandardFilePermission> permissions = readStandardPermissions(f);
         for (StandardFilePermission permission : permissions) {

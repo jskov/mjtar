@@ -15,12 +15,13 @@
 package dk.mada.mjtar;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.jspecify.annotations.Nullable;
 
 /// Tar output stream, used for writing content to a tar archive.
@@ -43,10 +44,9 @@ public final class TarOutputStream extends OutputStream {
     /// Opens an archive file for writing to.
     ///
     /// @param fout the file to write to
-    /// @throws FileNotFoundException if the file exists but is a directory rather than a regular file, does not
-    ///  exist but cannot be created, or cannot be opened for any other reason
-    public TarOutputStream(final File fout) throws FileNotFoundException {
-        this.out = new BufferedOutputStream(new FileOutputStream(fout));
+    /// @throws IOException if there is an IO error
+    public TarOutputStream(final Path fout) throws IOException {
+        this.out = new BufferedOutputStream(Files.newOutputStream(fout));
         bytesWritten = 0;
         currentFileSize = 0;
     }
@@ -63,10 +63,11 @@ public final class TarOutputStream extends OutputStream {
     /// @throws FileNotFoundException if the file exists but is a directory rather than a regular file, does not
     ///  exist but cannot be created, or cannot be opened for any other reason
     /// @throws IOException if an I/O error occurs
-    public TarOutputStream(final File fout, final boolean append) throws IOException {
+    public TarOutputStream(final Path fout, final boolean append) throws IOException {
+        java.io.File file = fout.toFile();
         @SuppressWarnings("resource")
-        RandomAccessFile raf = new RandomAccessFile(fout, "rw");
-        final long fileSize = fout.length();
+        RandomAccessFile raf = new RandomAccessFile(file, "rw");
+        final long fileSize = file.length();
         if (append && fileSize > TarConstants.EOF_BLOCK) {
             raf.seek(fileSize - TarConstants.EOF_BLOCK);
         }

@@ -13,8 +13,6 @@
 /// limitations under the License.
 package dk.mada.mjtar;
 
-import java.io.File;
-
 /// Tar header definitions.
 ///
 /// ```
@@ -177,7 +175,7 @@ public final class TarHeader {
     /// @param permissions  the entry permissions
     public static TarHeader createHeader(String entryName, long size, long modTime, boolean dir, int permissions) {
         String name = entryName;
-        name = TarUtils.trim(name.replace(File.separatorChar, '/'), '/');
+        name = TarUtils.trim(name.replace(java.io.File.separatorChar, '/'), '/');
 
         TarHeader header = new TarHeader();
         header.linkName = new StringBuffer("");

@@ -14,7 +14,12 @@
 
 package dk.mada.mjtar;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Stream;
 
 /// Tar computation utilities.
 ///
@@ -29,33 +34,27 @@ public final class TarUtils {
     ///
     /// @param path the path to inspect
     /// @return the expected size of a tar for the path
-    public static long calculateTarSize(File path) {
+    public static long calculateTarSize(Path path) {
         return tarSize(path) + TarConstants.EOF_BLOCK;
     }
 
-    private static long tarSize(File dir) {
-        long size = 0;
-
-        if (dir.isFile()) {
-            return entrySize(dir.length());
-        } else {
-            File[] subFiles = dir.listFiles();
-
-            if (subFiles != null && subFiles.length > 0) {
-                for (File file : subFiles) {
-                    if (file.isFile()) {
-                        size += entrySize(file.length());
-                    } else {
-                        size += tarSize(file);
-                    }
-                }
-            } else {
-                // Empty folder header
-                return TarConstants.HEADER_BLOCK;
-            }
+    private static long tarSize(Path dir) {
+        if (Files.isRegularFile(dir)) {
+            return entrySize(dir.toFile().length());
         }
 
-        return size;
+        List<Path> subFiles;
+        try (Stream<Path> files = Files.list(dir)) {
+            subFiles = files.toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to list files in " + dir, e);
+        }
+        if (subFiles.isEmpty()) {
+            // Empty folder header
+            return TarConstants.HEADER_BLOCK;
+        } else {
+            return subFiles.stream().mapToLong(TarUtils::tarSize).sum();
+        }
     }
 
     private static long entrySize(long fileSize) {

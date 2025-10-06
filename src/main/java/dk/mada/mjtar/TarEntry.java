@@ -13,18 +13,27 @@
 /// limitations under the License.
 package dk.mada.mjtar;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import org.jspecify.annotations.Nullable;
 
 /// An entry in a tar-file.
 ///
 /// @author Kamran Zafar
 public final class TarEntry {
-    private @Nullable File file;
+    private @Nullable Path file;
     private TarHeader header;
 
-    public TarEntry(File file, String entryName) {
+    /// Creates a new tar entry, initializing the header with information
+    /// from the specified file.
+    ///
+    /// @param file       the file to get header information from
+    /// @param entryName  the entry name
+    /// @throws IOException if there is an IO failure
+    public TarEntry(Path file, String entryName) throws IOException {
         this.file = file;
         this.header = TarEntry.extractTarHeader(entryName, file);
     }
@@ -126,7 +135,7 @@ public final class TarEntry {
         return new Date(header.modTime * 1000);
     }
 
-    public @Nullable File getFile() {
+    public @Nullable Path getFile() {
         return this.file;
     }
 
@@ -141,7 +150,7 @@ public final class TarEntry {
     /// Checks if this org.kamrazafar.jtar entry is a directory
     public boolean isDirectory() {
         if (this.file != null) {
-            return this.file.isDirectory();
+            return Files.isDirectory(this.file);
         }
 
         if (header != null) {
@@ -160,10 +169,15 @@ public final class TarEntry {
     /// Extract header from the associated file
     ///
     /// @param entryName  the name to give the header
-    private static TarHeader extractTarHeader(String entryName, File file) {
+    /// @throws IOException if there is an IO error
+    private static TarHeader extractTarHeader(String entryName, Path file) throws IOException {
         int permissions = PermissionUtils.permissions(file);
         return TarHeader.createHeader(
-                entryName, file.length(), file.lastModified() / 1000, file.isDirectory(), permissions);
+                entryName,
+                Files.size(file),
+                Files.getLastModifiedTime(file).to(TimeUnit.SECONDS),
+                Files.isDirectory(file),
+                permissions);
     }
 
     /// Calculate checksum of a buffer.
