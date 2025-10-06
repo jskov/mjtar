@@ -197,7 +197,7 @@ class JTarTest {
 		}
 	}
 
-	public void tarFolder(String parent, String path, TarOutputStream out) throws IOException {
+	void tarFolder(String parent, String path, TarOutputStream out) throws IOException {
 		BufferedInputStream origin = null;
 		File f = new File(path);
 		String files[] = f.list();
@@ -248,7 +248,7 @@ class JTarTest {
 	}
 
 	@Test
-	public void fileEntry() throws IOException {
+	void fileEntry() throws IOException {
 		String fileName = "file.txt";
 		long fileSize = 14523;
 		long modTime = System.currentTimeMillis() / 1000;
