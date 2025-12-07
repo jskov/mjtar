@@ -54,10 +54,10 @@ public final class TarEntry {
 
     @Override
     public boolean equals(Object it) {
-        if (!(it instanceof TarEntry)) {
-            return false;
+        if (it instanceof TarEntry te) {
+            return header.name.equals(te.header.name);
         }
-        return header.name.toString().equals(((TarEntry) it).header.name.toString());
+        return false;
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class TarEntry {
     }
 
     public boolean isDescendent(TarEntry desc) {
-        return desc.header.name.toString().startsWith(header.name.toString());
+        return desc.header.name.startsWith(header.name);
     }
 
     public TarHeader getHeader() {
@@ -74,16 +74,16 @@ public final class TarEntry {
     }
 
     public String getName() {
-        String name = header.name.toString();
-        if (header.namePrefix != null && !header.namePrefix.toString().equals("")) {
-            name = header.namePrefix.toString() + "/" + name;
+        String name = header.name;
+        if (header.namePrefix != null && !header.namePrefix.isEmpty()) {
+            name = header.namePrefix + "/" + name;
         }
 
         return name;
     }
 
     public void setName(String name) {
-        header.name = new StringBuffer(name);
+        header.name = name;
     }
 
     public int getUserId() {
@@ -103,19 +103,19 @@ public final class TarEntry {
     }
 
     public String getUserName() {
-        return header.userName.toString();
+        return header.userName;
     }
 
     public void setUserName(String userName) {
-        header.userName = new StringBuffer(userName);
+        header.userName = userName;
     }
 
     public String getGroupName() {
-        return header.groupName.toString();
+        return header.groupName;
     }
 
     public void setGroupName(String groupName) {
-        header.groupName = new StringBuffer(groupName);
+        header.groupName = groupName;
     }
 
     public void setIds(int userId, int groupId) {
@@ -158,7 +158,7 @@ public final class TarEntry {
                 return true;
             }
 
-            if (header.name.toString().endsWith("/")) {
+            if (header.name.endsWith("/")) {
                 return true;
             }
         }

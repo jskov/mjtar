@@ -239,7 +239,7 @@ class JTarTest {
 
 		// Create a header object and check the fields
 		TarHeader fileHeader = TarHeader.createHeader(fileName, fileSize, modTime, false, permissions);
-		assertEquals(fileName, fileHeader.name.toString());
+		assertEquals(fileName, fileHeader.name);
 		assertEquals(TarHeader.LF_NORMAL, fileHeader.linkFlag);
 		assertEquals(fileSize, fileHeader.size);
 		assertEquals(modTime, fileHeader.modTime);
