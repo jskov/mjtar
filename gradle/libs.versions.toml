@@ -3,7 +3,8 @@ jspecify            = { module = "org.jspecify:jspecify", version = "1.0.0" }
 assertJ             = { module = "org.assertj:assertj-core", version = "3.27.3" }
 junit               = { module = "org.junit.jupiter:junit-jupiter" }
 junitPlatform       = { module = "org.junit.platform:junit-platform-launcher"}
-junitBom            = { module = "org.junit:junit-bom", version ="6.0.0" }
+junitBom            = { module = "org.junit:junit-bom", version = "6.0.0" }
+commonsCompress     = { module = "org.apache.commons:commons-compress", version = "1.28.0" }
 
 [bundles]
-testUnit            = [ "assertJ", "jspecify", "junit", "junitPlatform" ]
+testUnit            = [ "assertJ", "jspecify", "junit", "junitPlatform", "commonsCompress" ]
