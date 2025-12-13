@@ -54,6 +54,8 @@ public class MozillaUnpackTest {
         BufferedOutputStream dest = null;
         byte data[] = new byte[16_000];
 
+        System.out.println("EXTRACT to " + destFolder);
+
         TarEntry entry;
         while ((entry = tis.getNextEntry()) != null) {
             int count;
