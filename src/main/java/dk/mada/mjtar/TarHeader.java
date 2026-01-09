@@ -89,7 +89,7 @@ public final class TarHeader {
     public static final int USTAR_FILENAME_PREFIX = 155;
 
     // Header values
-    public StringBuffer name;
+    public String name;
     public int mode;
     public int userId;
     public int groupId;
@@ -97,19 +97,19 @@ public final class TarHeader {
     public long modTime;
     public int checkSum;
     public byte linkFlag;
-    public StringBuffer linkName;
-    public StringBuffer magic; // ustar indicator and version
-    public StringBuffer userName;
-    public StringBuffer groupName;
+    public String linkName;
+    public String magic; // ustar indicator and version
+    public String userName;
+    public String groupName;
     public int devMajor;
     public int devMinor;
-    public StringBuffer namePrefix;
+    public String namePrefix;
 
     public TarHeader() {
-        this.magic = new StringBuffer(TarHeader.USTAR_MAGIC);
+        this.magic = TarHeader.USTAR_MAGIC;
 
-        this.name = new StringBuffer();
-        this.linkName = new StringBuffer();
+        this.name = "";
+        this.linkName = "";
 
         String user = System.getProperty("user.name", "");
 
@@ -119,9 +119,9 @@ public final class TarHeader {
 
         this.userId = 0;
         this.groupId = 0;
-        this.userName = new StringBuffer(user);
-        this.groupName = new StringBuffer("");
-        this.namePrefix = new StringBuffer();
+        this.userName = user;
+        this.groupName = "";
+        this.namePrefix = "";
     }
 
     /// Parse an entry name from a header buffer.
@@ -130,8 +130,8 @@ public final class TarHeader {
     /// @param offset  the offset into the buffer from which to parse.
     /// @param length  the number of header bytes to parse.
     /// @return the header's entry name
-    public static StringBuffer parseName(byte[] header, int offset, int length) {
-        StringBuffer result = new StringBuffer(length);
+    public static String parseName(byte[] header, int offset, int length) {
+        StringBuilder result = new StringBuilder(length);
 
         int end = offset + length;
         for (int i = offset; i < end; ++i) {
@@ -141,7 +141,7 @@ public final class TarHeader {
             result.append((char) header[i]);
         }
 
-        return result;
+        return result.toString();
     }
 
     /// Write an entry name into a buffer.
@@ -151,7 +151,7 @@ public final class TarHeader {
     /// @param offset  the offset into the buffer from which write
     /// @param length  the number of header bytes to write
     /// @return the next offset in the buffer
-    public static int writeEntryName(StringBuffer name, byte[] buf, int offset, int length) {
+    public static int writeEntryName(String name, byte[] buf, int offset, int length) {
         int i;
 
         for (i = 0; i < length && i < name.length(); ++i) {
@@ -178,19 +178,19 @@ public final class TarHeader {
         name = TarUtils.trim(name.replace(java.io.File.separatorChar, '/'), '/');
 
         TarHeader header = new TarHeader();
-        header.linkName = new StringBuffer("");
+        header.linkName = "";
         header.mode = permissions;
 
         if (name.length() > 100) {
-            header.namePrefix = new StringBuffer(name.substring(0, name.lastIndexOf('/')));
-            header.name = new StringBuffer(name.substring(name.lastIndexOf('/') + 1));
+            header.namePrefix = name.substring(0, name.lastIndexOf('/'));
+            header.name = name.substring(name.lastIndexOf('/') + 1);
         } else {
-            header.name = new StringBuffer(name);
+            header.name = name;
         }
         if (dir) {
             header.linkFlag = TarHeader.LF_DIR;
             if (header.name.charAt(header.name.length() - 1) != '/') {
-                header.name.append("/");
+                header.name = header.name + "/";
             }
             header.size = 0;
         } else {

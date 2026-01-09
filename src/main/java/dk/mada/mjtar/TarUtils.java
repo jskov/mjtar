@@ -77,7 +77,7 @@ public final class TarUtils {
     /// @param c the character to trim away
     /// @return the resulting string
     public static String trim(String s, char c) {
-        StringBuffer tmp = new StringBuffer(s);
+        StringBuilder tmp = new StringBuilder(s);
         for (int i = 0; i < tmp.length(); i++) {
             if (tmp.charAt(i) != c) {
                 break;
