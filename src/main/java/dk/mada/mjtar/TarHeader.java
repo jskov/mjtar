@@ -205,4 +205,19 @@ public final class TarHeader {
 
         return header;
     }
+
+    /// {@return true if the entry represents a regular file}
+    public boolean isRegularFile() {
+        return linkFlag == TarHeader.LF_NORMAL;
+    }
+
+    /// {@return true if the entry represents a directory}
+    public boolean isDirectory() {
+        return linkFlag == TarHeader.LF_DIR;
+    }
+
+    /// {@return true if the entry represents a symbolic link}
+    public boolean isSymbolicLink() {
+        return linkFlag == TarHeader.LF_SYMLINK;
+    }
 }
