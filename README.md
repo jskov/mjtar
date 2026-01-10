@@ -1,8 +1,6 @@
-# Overview
+I had an idea to modernize this repository (cloned from https://github.com/kamranzafar/jtar).
 
-I need a java-tar for my backup project.
+But I realized I'd much rather make a new implementation from documentation, than try to rework this code base.
+I might fail and decide to revisit this. But having (more) fun is priority one.
 
-For some entertainment, I will try to modernize this fork of https://github.com/kamranzafar/jtar to Java 25.
-
-There is no plan to contribute back to the parent repository (which looks both dead and cold).  
-So I am switching the build system to Gradle, and moving to code to a new package.
+So for now, this is archived.
